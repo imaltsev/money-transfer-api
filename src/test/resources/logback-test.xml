@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOGS" value="build"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>
+                %green(%date{ISO8601}) %highlight(%-5level) [%blue(%thread)] %yellow(%logger) - %msg%n%throwable
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="Console"/>
+    </root>
+
+    <logger name="dev.maltsev.money.transfer.api" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <logger name="org.junit" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <logger name="dev.maltsev.money.transfer.api" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="io.vertx" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="org.sql2o" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+
+</configuration>

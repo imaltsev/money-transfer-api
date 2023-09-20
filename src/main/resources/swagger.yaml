@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Money Transfer API
+  description: API for handling money transfers and withdrawals
+
+paths:
+  /customers/{customer}/transfer:
+    post:
+      summary: Handle Money Transfer Request
+      description: Create a new transfer transaction for the given customer.
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          description: Login of the customer.
+          schema:
+            type: string
+      requestBody:
+        description: Transfer request details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        200:
+          description: Transfer request has been processed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionIdResponse'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+  /customers/{customer}/withdraw:
+    post:
+      summary: Handle Withdraw Request
+      description: Create a new withdrawal transaction for the given customer.
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          description: Login of the customer.
+          schema:
+            type: string
+      requestBody:
+        description: Withdraw request details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        200:
+          description: Withdraw request has been processed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionIdResponse'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+  /customers/{customer}/transactions/{transactionId}/status:
+    get:
+      summary: Get Transaction Status
+      description: Retrieve the status of a given transaction for the specified customer.
+      parameters:
+        - in: path
+          name: customer
+          required: true
+          description: Login of the customer.
+          schema:
+            type: string
+        - in: path
+          name: transactionId
+          required: true
+          description: ID of the transaction.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful response containing transaction status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionStatusResponse'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+components:
+  schemas:
+    TransferRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        payerAccountNumber:
+          type: string
+        recipientAccountNumber:
+          type: string
+        recipient:
+          type: string
+        amount:
+          type: number
+          format: float
+    WithdrawRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        payerAccountNumber:
+          type: string
+        address:
+          type: string
+        amount:
+          type: number
+          format: float
+    TransactionIdResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+    TransactionStatusResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [COMPLETED, PROCESSING, FAILED]
+

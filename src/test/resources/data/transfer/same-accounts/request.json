@@ -1,0 +1,7 @@
+{
+  "requestId": "b3a3f6e1-a7d9-4a2f-8c76-74d01a3a17e0",
+  "payerAccountNumber": "account",
+  "recipientAccountNumber": "account",
+  "recipient": "customer",
+  "amount": 100
+}

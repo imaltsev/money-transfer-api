@@ -39,9 +39,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static WithdrawalService.WithdrawalState.COMPLETED;
-import static WithdrawalService.WithdrawalState.FAILED;
-import static WithdrawalService.WithdrawalState.PROCESSING;
+import static dev.maltsev.money.transfer.api.service.impl.WithdrawalService.WithdrawalState.COMPLETED;
+import static dev.maltsev.money.transfer.api.service.impl.WithdrawalService.WithdrawalState.FAILED;
+import static dev.maltsev.money.transfer.api.service.impl.WithdrawalService.WithdrawalState.PROCESSING;
 
 interface WithdrawalService {
     /**
@@ -65,8 +65,11 @@ interface WithdrawalService {
         PROCESSING, COMPLETED, FAILED
     }
 
-    record WithdrawalId(UUID value) {}
-    record Address(String value) {}
+    record WithdrawalId(UUID value) {
+    }
+
+    record Address(String value) {
+    }
 }
 
 class WithdrawalServiceStub implements WithdrawalService {
@@ -102,4 +105,56 @@ class WithdrawalServiceStub implements WithdrawalService {
     }
 }
 
+```
+
+## Notes
+
+### Tech stack
+
+- JRE 20.0.2
+- Maven 3.8.2 - build system
+- Vertx 4.4.5 - http server & async framework
+- HSQLDB 2.7.1 - in-memory database
+- Sql2o 1.6.0 - JDBC wrapper library
+
+### Domain model
+
+![Domain model](./docs/domain.png)
+
+### API
+
+[Swagger](./src/main/resources/swagger.yaml) or run application and open http://localhost:8080
+
+### Component diagram
+
+To be added
+
+### Build
+
+Maven wrapper is used as a build system.
+
+```bash
+> ./mvnw clean package
+```
+
+Executable jar can be found in `target/money-transfer-api-1.0-SNAPSHOT.jar`.
+
+#### Build with test coverage report
+
+To build with pitest mutational test coverage report use:
+
+```bash
+> ./mvnw clean package org.pitest:pitest-maven:mutationCoverage
+```
+
+Test coverage report can be found in `./target/reports/pitest/{datetime}/index.html`
+
+![Coverage report](./docs/coverage.png)
+
+### Run
+
+To run the program use:
+
+```bash
+> java -jar ./target/money-transfer-api-1.0-SNAPSHOT.jar
 ```
