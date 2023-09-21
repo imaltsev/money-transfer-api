@@ -1,8 +1,8 @@
 package dev.maltsev.money.transfer.api.service.impl;
 
 import dev.maltsev.money.transfer.api.dao.TransactionDao;
+import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
-import dev.maltsev.money.transfer.api.domain.object.TransactionType;
 import dev.maltsev.money.transfer.api.service.AbstractService;
 import dev.maltsev.money.transfer.api.service.exception.UnknownTransactionException;
 import org.sql2o.Connection;
@@ -29,9 +29,9 @@ public class QueryService extends AbstractService {
         }
     }
 
-    public List<String> findAllStuckTransactionIdsByType(TransactionType transactionType) {
+    public List<Transaction> getAllStuckTransactions() {
         try (Connection connection = sql.open()) {
-            return TransactionDao.findAllStuckTransactionIdsByType(transactionType, connection);
+            return TransactionDao.getAllStuckTransactions(connection);
         }
     }
 }

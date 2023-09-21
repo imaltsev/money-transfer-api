@@ -42,7 +42,7 @@ public class AccountDao {
                 .executeUpdate();
     }
 
-    public static void lockRowsForInvolvedAccounts(Transaction transaction, Connection connection) {
+    public static void lockInvolvedAccounts(Transaction transaction, Connection connection) {
         if (transaction.type() == TransactionType.TRANSFER) {
             connection.createQuery("SELECT * FROM accounts WHERE number IN (:payerAccountNumber, :recipientAccountNumber) FOR UPDATE")
                     .addParameter("payerAccountNumber", transaction.payerAccountNumber())

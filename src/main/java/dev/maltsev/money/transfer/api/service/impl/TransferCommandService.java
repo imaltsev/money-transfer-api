@@ -32,7 +32,7 @@ public class TransferCommandService extends AbstractCommandService implements Co
                 if (transaction.status() == PROCESSING) {
                     try {
                         validateTransferTransaction(transaction, connection);
-                        lockRowsForInvolvedAccounts(transaction, connection);
+                        lockInvolvedAccounts(transaction, connection);
                         subtractAmountFromPayerAccount(transaction, connection);
                         addAmountToRecipientAccount(transaction, connection);
                         updateTransaction(transaction.complete(), connection);

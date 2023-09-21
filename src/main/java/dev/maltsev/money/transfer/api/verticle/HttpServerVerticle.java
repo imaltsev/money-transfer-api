@@ -65,8 +65,7 @@ public class HttpServerVerticle extends AbstractVerticle {
     private void runPeriodicRecoverStuckTransactionWatcherInBackground() {
         vertx.setPeriodic(recoveryDelay, id -> {
             vertx.executeBlocking(() -> {
-                recoverStuckTransactions(TransactionType.TRANSFER);
-                recoverStuckTransactions(TransactionType.WITHDRAWAL);
+                recoverStuckTransactions();
                 return null;
             }, false).onComplete(res -> {
                 if (res.failed()) {
@@ -170,8 +169,8 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
-    public void recoverStuckTransactions(TransactionType transactionType) {
-        queryService.findAllStuckTransactionIdsByType(transactionType)
-                .forEach(transactionId -> vertx.eventBus().publish(transactionType.name(), transactionId));
+    public void recoverStuckTransactions() {
+        queryService.getAllStuckTransactions()
+                .forEach(transaction -> vertx.eventBus().publish(transaction.type().name(), transaction.id()));
     }
 }

@@ -8,7 +8,6 @@ import dev.maltsev.money.transfer.api.domain.json.TransferRequest;
 import dev.maltsev.money.transfer.api.domain.json.WithdrawRequest;
 import dev.maltsev.money.transfer.api.domain.object.Money;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
-import dev.maltsev.money.transfer.api.domain.object.TransactionType;
 import dev.maltsev.money.transfer.api.service.exception.UnknownTransactionException;
 import dev.maltsev.money.transfer.api.service.impl.QueryService;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +53,7 @@ public class QueryServiceTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testFindAllHandlingTransactionIdsByType_TransferRequest_Ok() {
+    public void testGetAllStuckTransactions_TransferRequest_Ok() {
         // Arrange
         Customer customer = new Customer("login").addAccount(new Account("credit", Money.fromInt(200))).addAccount(new Account("debit", Money.fromInt(100)));
         arrangeCustomer(customer);
@@ -65,16 +64,16 @@ public class QueryServiceTest extends AbstractDatabaseTest {
         transaction.setUpdated(transaction.created().minusSeconds(61));
         arrangeTransaction(transaction);
         // Act
-        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.TRANSFER);
+        List<Transaction> stuckTransactions = queryService.getAllStuckTransactions();
 
         // Assert
-        assertNotNull(transactionIds);
-        assertEquals(1, transactionIds.size());
-        assertTrue(transactionIds.contains(transaction.id()));
+        assertNotNull(stuckTransactions);
+        assertEquals(1, stuckTransactions.size());
+        assertEquals(transaction.id(), stuckTransactions.get(0).id());
     }
 
     @Test
-    public void testFindAllHandlingTransactionIdsByType_WithdrawRequest_Ok() {
+    public void testGetAllStuckTransactions_WithdrawRequest_Ok() {
         // Arrange
         Customer customer = new Customer("login").addAccount(new Account("credit", Money.fromInt(200))).addAccount(new Account("debit", Money.fromInt(100)));
         arrangeCustomer(customer);
@@ -86,48 +85,43 @@ public class QueryServiceTest extends AbstractDatabaseTest {
         arrangeTransaction(transaction);
 
         // Act
-        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.WITHDRAWAL);
+        List<Transaction> stuckTransactions = queryService.getAllStuckTransactions();
 
         // Assert
-        assertNotNull(transactionIds);
-        assertEquals(1, transactionIds.size());
-        assertTrue(transactionIds.contains(transaction.id()));
+        assertNotNull(stuckTransactions);
+        assertEquals(1, stuckTransactions.size());
+        assertEquals(transaction.id(), stuckTransactions.get(0).id());
     }
 
     @Test
-    public void testFindAllHandlingTransactionIdsByType_TransferRequest_Negative() {
+    public void testGetAllStuckTransactions_Negative() {
         // Arrange
         Customer customer = new Customer("login").addAccount(new Account("credit", Money.fromInt(200))).addAccount(new Account("debit", Money.fromInt(100)));
         arrangeCustomer(customer);
 
         TransferRequest transferRequest1 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
-        Transaction transaction1 = transferRequest1.toTransaction(customer.login());
-        transaction1.setStatus(TransactionStatus.PROCESSING);
-        arrangeTransaction(transaction1);
-
-        TransferRequest transferRequest2 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
-        Transaction transaction2 = transferRequest2.toTransaction(customer.login());
+        Transaction transaction2 = transferRequest1.toTransaction(customer.login());
         transaction2.setStatus(TransactionStatus.AWAITING);
         transaction2.setUpdated(transaction2.created().minusSeconds(61));
         arrangeTransaction(transaction2);
 
-        TransferRequest transferRequest3 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
-        Transaction transaction3 = transferRequest3.toTransaction(customer.login());
+        TransferRequest transferRequest2 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
+        Transaction transaction3 = transferRequest2.toTransaction(customer.login());
         transaction3.setStatus(TransactionStatus.COMPLETED);
         transaction3.setUpdated(transaction3.created().minusSeconds(61));
         arrangeTransaction(transaction3);
 
-        TransferRequest transferRequest4 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
-        Transaction transaction4 = transferRequest4.toTransaction(customer.login());
+        TransferRequest transferRequest3 = new TransferRequest(UUID.randomUUID(), "credit", "debit", "login", Money.fromInt(100));
+        Transaction transaction4 = transferRequest3.toTransaction(customer.login());
         transaction4.setStatus(TransactionStatus.FAILED);
         transaction4.setUpdated(transaction4.created().minusSeconds(61));
         arrangeTransaction(transaction4);
 
         // Act
-        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.TRANSFER);
+        List<Transaction> stuckTransactions = queryService.getAllStuckTransactions();
 
         // Assert
-        assertNotNull(transactionIds);
-        assertEquals(0, transactionIds.size());
+        assertNotNull(stuckTransactions);
+        assertEquals(0, stuckTransactions.size());
     }
 }

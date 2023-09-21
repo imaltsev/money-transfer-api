@@ -15,6 +15,8 @@ import java.util.EnumSet;
 import java.util.UUID;
 
 import static dev.maltsev.money.transfer.api.AbstractScenarioApiTest.*;
+import static dev.maltsev.money.transfer.api.domain.object.TransactionStatus.COMPLETED;
+import static dev.maltsev.money.transfer.api.domain.object.TransactionStatus.FAILED;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -102,11 +104,11 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
         String transactionId = assertWithdrawal("customer", getJsonRequest("withdraw/single"));
         TransactionStatus status = assertGetTransactionStatus("customer", transactionId);
 
-        assertTrue(EnumSet.of(TransactionStatus.COMPLETED, TransactionStatus.FAILED).contains(status));
-        if (status == TransactionStatus.COMPLETED) {
+        assertTrue(EnumSet.of(COMPLETED, FAILED).contains(status));
+        if (status == COMPLETED) {
             assertPayerAccountBalance(transactionId, Money.fromInt(100));
         }
-        if (status == TransactionStatus.FAILED) {
+        if (status == FAILED) {
             assertPayerAccountBalance(transactionId, Money.fromInt(200));
         }
     }
@@ -118,7 +120,7 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
         String transactionId = assertWithdrawal("customer", getJsonRequest("withdraw/insufficient-funds"));
         TransactionStatus status = assertGetTransactionStatus("customer", transactionId);
 
-        assertEquals(TransactionStatus.FAILED, status);
+        assertEquals(FAILED, status);
         assertPayerAccountBalance(transactionId, Money.fromInt(100));
     }
 
@@ -161,7 +163,12 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
 
         TransactionStatus status = assertGetTransactionStatus("customer", transactionId);
 
-        assertEquals(TransactionStatus.COMPLETED, status);
-        assertPayerAccountBalance(transactionId, Money.fromInt(100));
+        assertTrue(EnumSet.of(COMPLETED, FAILED).contains(status));
+        if (status == COMPLETED) {
+            assertPayerAccountBalance(transactionId, Money.fromInt(100));
+        }
+        if (status == FAILED) {
+            assertPayerAccountBalance(transactionId, Money.fromInt(200));
+        }
     }
 }

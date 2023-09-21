@@ -63,7 +63,7 @@ public class WithdrawCommandService extends AbstractCommandService implements Co
             connection.commit();
             return transaction.status();
         } else if (withdrawalState == FAILED) {
-            lockRowsForInvolvedAccounts(transaction, connection);
+            lockInvolvedAccounts(transaction, connection);
             refundPayerAccount(transaction, connection);
             updateTransaction(transaction.fail(), connection);
             connection.commit();
@@ -78,7 +78,7 @@ public class WithdrawCommandService extends AbstractCommandService implements Co
     private TransactionStatus processTransaction(Transaction transaction, Connection connection) {
         try {
             validateTransaction(transaction, connection);
-            lockRowsForInvolvedAccounts(transaction, connection);
+            lockInvolvedAccounts(transaction, connection);
             subtractAmountFromPayerAccount(transaction, connection);
 
             externalWithdrawalService.requestWithdrawal(new WithdrawalService.WithdrawalId(UUID.fromString(transaction.id())),
