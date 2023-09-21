@@ -93,6 +93,30 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
     }
 
     @Test
+    public void testTransfer_NegativeAmount_Fail() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(getJsonRequest("transfer/negative-amount")).
+                when()
+                .post("customers/customer/transfer").
+                then()
+                .statusCode(400)
+                .body("message", Matchers.containsString("amount can't be zero or negative"));
+    }
+
+    @Test
+    public void testTransfer_ZeroAmount_Fail() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(getJsonRequest("transfer/zero-amount")).
+                when()
+                .post("customers/customer/transfer").
+                then()
+                .statusCode(400)
+                .body("message", Matchers.containsString("amount can't be zero or negative"));
+    }
+
+    @Test
     public void testTransfer_SingleCustomer_Ok() {
         arrangeDatabase("transfer/single-customer");
 

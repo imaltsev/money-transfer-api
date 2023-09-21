@@ -16,10 +16,9 @@ import static lombok.AccessLevel.PRIVATE;
 public class AccountDao {
 
     public static void insertAccount(Account account, Connection connection) {
-        connection.createQuery("INSERT INTO ACCOUNTS (NUMBER, BALANCE, CURRENCY) VALUES (:number, :balance, :currency)")
+        connection.createQuery("INSERT INTO ACCOUNTS (NUMBER, BALANCE) VALUES (:number, :balance)")
                 .addParameter("number", account.number())
                 .addParameter("balance", account.balance().value())
-                .addParameter("currency", account.currency())
                 .executeUpdate();
     }
 

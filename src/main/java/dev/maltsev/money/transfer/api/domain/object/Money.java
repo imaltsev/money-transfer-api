@@ -14,8 +14,8 @@ public final class Money implements Comparable<Money> {
     private final BigDecimal value;
 
     public Money(@NonNull BigDecimal value) {
-        if (value.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Amount can't be null or negative");
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("amount can't be zero or negative");
         }
         this.value = value;
     }

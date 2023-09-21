@@ -98,6 +98,30 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
     }
 
     @Test
+    public void testWithdraw_NegativeAmount_Fail() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(getJsonRequest("withdraw/negative-amount")).
+                when()
+                .post("customers/customer/withdraw").
+                then()
+                .statusCode(400)
+                .body("message", Matchers.containsString("amount can't be zero or negative"));
+    }
+
+    @Test
+    public void testWithdraw_ZeroAmount_Fail() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(getJsonRequest("withdraw/zero-amount")).
+                when()
+                .post("customers/customer/withdraw").
+                then()
+                .statusCode(400)
+                .body("message", Matchers.containsString("amount can't be zero or negative"));
+    }
+
+    @Test
     public void testWithdraw_SingleWithdrawal_Ok() {
         arrangeDatabase("withdraw/single");
 

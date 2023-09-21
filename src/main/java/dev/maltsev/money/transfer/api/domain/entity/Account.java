@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 public final class Account {
     private final String number;
     private final Money balance;
-    private String currency = "USD";
 
     public Account(@NonNull String number, @NonNull Money balance) {
         this.number = number;
@@ -33,9 +32,5 @@ public final class Account {
 
     public Money balance() {
         return balance;
-    }
-
-    public String currency() {
-        return currency;
     }
 }

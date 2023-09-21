@@ -6,8 +6,7 @@ CREATE TABLE customers
 CREATE TABLE accounts
 (
     number  VARCHAR(34) PRIMARY KEY,
-    balance DECIMAL NOT NULL,
-    currency VARCHAR(3) NOT NULL
+    balance DECIMAL NOT NULL
 );
 
 CREATE TABLE customer_accounts
