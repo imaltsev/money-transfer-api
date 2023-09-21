@@ -10,13 +10,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TransferApiTest extends AbstractApiTest {
 
     @BeforeAll
     public static void startServer() {
+        System.setProperty("recoveryDelay", "1000");
         Application.main(new String[]{});
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
@@ -122,5 +126,37 @@ public class TransferApiTest extends AbstractApiTest {
         assertEquals(TransactionStatus.FAILED, status);
         assertPayerAccountBalance(transactionId, Money.fromInt(50));
         assertRecipientAccountBalance(transactionId, Money.fromInt(100));
+    }
+
+    @Test
+    public void testTransactionStatus_UnknownTransactionId_Failed() {
+        initDatabase("transfer/single-customer");
+        assertSendTransfer("customer", getJsonRequest("transfer/single-customer"));
+
+        String status = given()
+                .when()
+                .get("/customers/%s/transactions/%s/status" .formatted("customer", UUID.randomUUID().toString()))
+                .then()
+                .statusCode(400)
+                .extract()
+                .path("status");
+
+        assertNull(status);
+    }
+
+    @Test
+    public void testTransactionStatus_UnknownCustomer_Failed() {
+        initDatabase("transfer/single-customer");
+
+        String transactionId = assertSendTransfer("customer", getJsonRequest("transfer/single-customer"));
+        String status = given()
+                .when()
+                .get("/customers/%s/transactions/%s/status" .formatted("unknown_customer", transactionId))
+                .then()
+                .statusCode(400)
+                .extract()
+                .path("status");
+
+        assertNull(status);
     }
 }

@@ -137,7 +137,7 @@ Maven wrapper is used as a build system.
 > ./mvnw clean package
 ```
 
-Executable jar can be found in `target/money-transfer-api-1.0-SNAPSHOT.jar`.
+Executable jar can be found in `./target/money-transfer-api-1.0-SNAPSHOT.jar`.
 
 #### Build with test coverage report
 
@@ -147,7 +147,7 @@ To build with pitest mutational test coverage report use:
 > ./mvnw clean package org.pitest:pitest-maven:mutationCoverage
 ```
 
-Test coverage report can be found in `./target/reports/pitest/{datetime}/index.html`
+Test coverage report can be found in `./target/pit-reports/index.html`
 
 ![Coverage report](./docs/coverage.png)
 

@@ -35,6 +35,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 
     private final QueryService queryService;
 
+    private final int recoveryDelay;
+
     @SneakyThrows
     private static void handleSwagger(RoutingContext routingContext) {
         routingContext.response()
@@ -61,7 +63,7 @@ public class HttpServerVerticle extends AbstractVerticle {
     }
 
     private void runPeriodicRecoverHandlingTransactionWatcherInBackground() {
-        vertx.setPeriodic(60_000, id -> {
+        vertx.setPeriodic(recoveryDelay, id -> {
             vertx.executeBlocking(() -> {
                 recoverHangingTransactions(TransactionType.TRANSFER);
                 recoverHangingTransactions(TransactionType.WITHDRAWAL);

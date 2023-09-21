@@ -12,11 +12,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 import static dev.maltsev.money.transfer.api.AbstractApiTest.*;
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class WithdrawalApiTest extends AbstractDatabaseTest {
 
@@ -118,5 +119,37 @@ public class WithdrawalApiTest extends AbstractDatabaseTest {
 
         assertEquals(TransactionStatus.FAILED, status);
         assertPayerAccountBalance(transactionId, Money.fromInt(100));
+    }
+
+    @Test
+    public void testTransactionStatus_UnknownTransactionId_Failed() {
+        initDatabase("withdraw/single");
+        assertWithdrawal("customer", getJsonRequest("withdraw/single"));
+
+        String status = given()
+                .when()
+                .get("/customers/%s/transactions/%s/status" .formatted("customer", UUID.randomUUID().toString()))
+                .then()
+                .statusCode(400)
+                .extract()
+                .path("status");
+
+        assertNull(status);
+    }
+
+    @Test
+    public void testTransactionStatus_UnknownCustomer_Failed() {
+        initDatabase("withdraw/single");
+
+        String transactionId = assertWithdrawal("customer", getJsonRequest("withdraw/single"));
+        String status = given()
+                .when()
+                .get("/customers/%s/transactions/%s/status" .formatted("unknown_customer", transactionId))
+                .then()
+                .statusCode(400)
+                .extract()
+                .path("status");
+
+        assertNull(status);
     }
 }

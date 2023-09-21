@@ -13,9 +13,10 @@ public class Application {
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
         Sql2o sql2o = setupDatabase();
+        int recoveryDelay = Integer.parseInt(System.getProperty("recoveryDelay", "60000"));
         TransferCommandService transferCommandService = new TransferCommandService(sql2o);
         WithdrawCommandService withdrawCommandService = new WithdrawCommandService(sql2o);
         QueryService queryService = new QueryService(sql2o);
-        vertx.deployVerticle(new HttpServerVerticle(transferCommandService, withdrawCommandService, queryService));
+        vertx.deployVerticle(new HttpServerVerticle(transferCommandService, withdrawCommandService, queryService, recoveryDelay));
     }
 }
