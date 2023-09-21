@@ -65,7 +65,7 @@ public class QueryServiceTest extends AbstractDatabaseTest {
         transaction.setUpdated(transaction.created().minusSeconds(61));
         arrangeTransaction(transaction);
         // Act
-        List<String> transactionIds = queryService.findAllHandlingTransactionIdsByType(TransactionType.TRANSFER);
+        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.TRANSFER);
 
         // Assert
         assertNotNull(transactionIds);
@@ -86,7 +86,7 @@ public class QueryServiceTest extends AbstractDatabaseTest {
         arrangeTransaction(transaction);
 
         // Act
-        List<String> transactionIds = queryService.findAllHandlingTransactionIdsByType(TransactionType.WITHDRAWAL);
+        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.WITHDRAWAL);
 
         // Assert
         assertNotNull(transactionIds);
@@ -124,7 +124,7 @@ public class QueryServiceTest extends AbstractDatabaseTest {
         arrangeTransaction(transaction4);
 
         // Act
-        List<String> transactionIds = queryService.findAllHandlingTransactionIdsByType(TransactionType.TRANSFER);
+        List<String> transactionIds = queryService.findAllStuckTransactionIdsByType(TransactionType.TRANSFER);
 
         // Assert
         assertNotNull(transactionIds);

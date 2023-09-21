@@ -123,7 +123,7 @@ class WithdrawalServiceStub implements WithdrawalService {
 
 ### API
 
-[Swagger](./src/main/resources/swagger.yaml) or run application and open http://localhost:8080
+Check [Swagger](./src/main/resources/swagger.yaml) out or run application and open http://localhost:8080
 
 ### Component diagram
 

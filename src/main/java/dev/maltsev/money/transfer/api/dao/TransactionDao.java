@@ -110,7 +110,7 @@ public class TransactionDao implements Loggable {
         );
     }
 
-    public static List<String> findAllHandlingTransactionIdsByType(TransactionType transactionType, Connection connection) {
+    public static List<String> findAllStuckTransactionIdsByType(TransactionType transactionType, Connection connection) {
         return connection.createQuery("SELECT ID FROM TRANSACTIONS WHERE TYPE = :transactionType AND STATUS = 'PROCESSING'" +
                         "AND UPDATED < :timestamp")
                 .addParameter("transactionType", transactionType)

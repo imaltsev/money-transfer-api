@@ -59,14 +59,14 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         runTransfersInBackground();
         runWithdrawalsInBackground();
-        runPeriodicRecoverHandlingTransactionWatcherInBackground();
+        runPeriodicRecoverStuckTransactionWatcherInBackground();
     }
 
-    private void runPeriodicRecoverHandlingTransactionWatcherInBackground() {
+    private void runPeriodicRecoverStuckTransactionWatcherInBackground() {
         vertx.setPeriodic(recoveryDelay, id -> {
             vertx.executeBlocking(() -> {
-                recoverHangingTransactions(TransactionType.TRANSFER);
-                recoverHangingTransactions(TransactionType.WITHDRAWAL);
+                recoverStuckTransactions(TransactionType.TRANSFER);
+                recoverStuckTransactions(TransactionType.WITHDRAWAL);
                 return null;
             }, false).onComplete(res -> {
                 if (res.failed()) {
@@ -170,8 +170,8 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
-    public void recoverHangingTransactions(TransactionType transactionType) {
-        queryService.findAllHandlingTransactionIdsByType(transactionType)
+    public void recoverStuckTransactions(TransactionType transactionType) {
+        queryService.findAllStuckTransactionIdsByType(transactionType)
                 .forEach(transactionId -> vertx.eventBus().publish(transactionType.name(), transactionId));
     }
 }

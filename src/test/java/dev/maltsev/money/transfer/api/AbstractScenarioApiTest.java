@@ -27,9 +27,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public abstract class AbstractApiTest extends AbstractDatabaseTest {
+public abstract class AbstractScenarioApiTest extends AbstractDatabaseTest {
 
-    public static void initDatabase(String folder) {
+    public static void arrangeDatabase(String folder) {
         try {
             String scriptString = readString(Paths.get("src/test/resources/data/" + folder + "/db.sql"));
             ScriptRunner scriptRunner = new ScriptRunner(sql2o.open().getJdbcConnection());

@@ -29,9 +29,9 @@ public class QueryService extends AbstractService {
         }
     }
 
-    public List<String> findAllHandlingTransactionIdsByType(TransactionType transactionType) {
+    public List<String> findAllStuckTransactionIdsByType(TransactionType transactionType) {
         try (Connection connection = sql.open()) {
-            return TransactionDao.findAllHandlingTransactionIdsByType(transactionType, connection);
+            return TransactionDao.findAllStuckTransactionIdsByType(transactionType, connection);
         }
     }
 }
