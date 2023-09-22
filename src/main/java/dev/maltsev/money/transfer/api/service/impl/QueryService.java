@@ -10,12 +10,23 @@ import org.sql2o.Sql2o;
 
 import java.util.List;
 
+/**
+ * Read-only operations for transactions
+ */
 public class QueryService extends AbstractService {
 
     public QueryService(Sql2o sql) {
         super(sql);
     }
 
+    /**
+     * Returns the status of the transaction.
+     *
+     * @param transactionId the ID of the transaction
+     * @param payer         the login of the customer who initiated the transaction
+     * @return the status of the transaction
+     * @throws UnknownTransactionException if the transaction with the specified ID and payer doesn't exist
+     */
     public TransactionStatus getTransactionStatus(String transactionId, String payer) throws UnknownTransactionException {
         try (Connection connection = sql.open()) {
             TransactionStatus status = TransactionDao.getTransactionStatus(transactionId, payer, connection);
@@ -29,6 +40,11 @@ public class QueryService extends AbstractService {
         }
     }
 
+    /**
+     * Returns all transactions that are stuck in the PROCESSING state.
+     *
+     * @return the list of stuck transactions
+     */
     public List<Transaction> getAllStuckTransactions() {
         try (Connection connection = sql.open()) {
             return TransactionDao.getAllStuckTransactions(connection);

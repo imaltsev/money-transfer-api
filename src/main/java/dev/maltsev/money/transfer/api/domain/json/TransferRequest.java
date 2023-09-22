@@ -43,7 +43,7 @@ public final class TransferRequest extends AbstractRequest {
     @Override
     public Transaction toTransaction(String payer) {
         if (payer.isBlank()) {
-            throw new IllegalArgumentException("Payer can't be null or blank");
+            throw new IllegalArgumentException("payer can't be null or blank");
         }
         LocalDateTime now = LocalDateTime.now();
         return new Transaction(

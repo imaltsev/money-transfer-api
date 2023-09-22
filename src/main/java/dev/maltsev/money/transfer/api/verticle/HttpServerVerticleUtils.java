@@ -1,5 +1,6 @@
 package dev.maltsev.money.transfer.api.verticle;
 
+import dev.maltsev.money.transfer.api.service.exception.InvalidClientRequestException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonObject;

@@ -27,7 +27,7 @@ public final class WithdrawRequest extends AbstractRequest {
         super(requestId, payerAccountNumber, amount);
 
         if (address == null || address.isBlank()) {
-            throw new IllegalArgumentException("Address can't be null or blank");
+            throw new IllegalArgumentException("address can't be null or blank");
         }
 
         //noinspection ResultOfMethodCallIgnored
@@ -38,7 +38,7 @@ public final class WithdrawRequest extends AbstractRequest {
     @Override
     public Transaction toTransaction(String payer) {
         if (payer.isBlank()) {
-            throw new IllegalArgumentException("Payer can't be null or blank");
+            throw new IllegalArgumentException("payer can't be null or blank");
         }
         LocalDateTime now = LocalDateTime.now();
         return new Transaction(
