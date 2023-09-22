@@ -1,5 +1,6 @@
 package dev.maltsev.money.transfer.api.verticle;
 
+import dev.maltsev.money.transfer.api.ApplicationArgs;
 import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.json.TransferRequest;
 import dev.maltsev.money.transfer.api.domain.json.WithdrawRequest;
@@ -36,7 +37,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     private final QueryService queryService;
 
-    private final long recoveryInterval;
+    private final ApplicationArgs args;
 
     @SneakyThrows
     private static void handleSwagger(RoutingContext routingContext) {
@@ -66,7 +67,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Periodically check for stuck transactions and attempt to recover them
     private void runPeriodicRecoverStuckTransactionWatcherInBackground() {
-        vertx.setPeriodic(recoveryInterval, id -> {
+        vertx.setPeriodic(args.getRecoveryInterval(), id -> {
             vertx.executeBlocking(() -> {
                 recoverStuckTransactions();
                 return null;
@@ -91,7 +92,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Process withdrawal requests in background worker threads
     private void runWithdrawalsInBackground() {
-        WorkerExecutor withdrawalExecutor = vertx.createSharedWorkerExecutor("withdrawal-worker-pool", 20);
+        WorkerExecutor withdrawalExecutor = vertx.createSharedWorkerExecutor("withdrawal-worker-pool", args.getWithdrawalWorkerPoolSize());
         vertx.eventBus().consumer(TransactionType.WITHDRAWAL.name(), message -> {
             withdrawalExecutor.executeBlocking(() -> {
                 String transactionId = (String) message.body();
@@ -110,7 +111,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Process transfer requests in background worker threads
     private void runTransfersInBackground() {
-        WorkerExecutor transferExecutor = vertx.createSharedWorkerExecutor("transfer-worker-pool", 10);
+        WorkerExecutor transferExecutor = vertx.createSharedWorkerExecutor("transfer-worker-pool", args.getTransferWorkerPoolSize());
         vertx.eventBus().consumer(TransactionType.TRANSFER.name(), message -> {
             transferExecutor.executeBlocking(() -> {
                 String transactionId = (String) message.body();

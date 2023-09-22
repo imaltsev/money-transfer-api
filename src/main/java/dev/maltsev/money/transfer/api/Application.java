@@ -1,7 +1,6 @@
 package dev.maltsev.money.transfer.api;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
 import dev.maltsev.money.transfer.api.service.impl.QueryService;
 import dev.maltsev.money.transfer.api.service.impl.TransferCommandService;
 import dev.maltsev.money.transfer.api.service.impl.WithdrawCommandService;
@@ -13,31 +12,26 @@ import static dev.maltsev.money.transfer.api.dao.DaoUtils.setupDatabase;
 
 public class Application {
 
-    @Parameter(names = "--help", help = true)
-    private boolean help;
-    @Parameter(names = {"--recoveryInterval", "-r"}, description = "An interval in milliseconds between transaction recovery attempts", arity = 1)
-    private long recoveryInterval = 60_000;
-
     public static void main(String[] args) {
-        Application application = new Application();
+        ApplicationArgs applicationArgs = new ApplicationArgs();
         JCommander commander = JCommander.newBuilder()
-                .addObject(application)
+                .addObject(applicationArgs)
                 .build();
         commander.parse(args);
 
-        if (application.help) {
+        if (applicationArgs.isHelp()) {
             commander.usage();
         } else {
-            application.run();
+            run(applicationArgs);
         }
     }
 
-    private void run() {
+    private static void run(ApplicationArgs args) {
         Vertx vertx = Vertx.vertx();
         Sql2o sql2o = setupDatabase();
         TransferCommandService transferCommandService = new TransferCommandService(sql2o);
         WithdrawCommandService withdrawCommandService = new WithdrawCommandService(sql2o);
         QueryService queryService = new QueryService(sql2o);
-        vertx.deployVerticle(new HttpServerVerticle(transferCommandService, withdrawCommandService, queryService, recoveryInterval));
+        vertx.deployVerticle(new HttpServerVerticle(transferCommandService, withdrawCommandService, queryService, args));
     }
 }

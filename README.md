@@ -1,3 +1,5 @@
+# Money Transfer API #
+
 ### Summary:
 
 Design and implement a RESTful API (including data model and the backing implementation) with following functional requirements:
@@ -111,7 +113,7 @@ class WithdrawalServiceStub implements WithdrawalService {
 
 ### Tech stack
 
-- JRE 20.0.2
+- JRE 21
 - Maven 3.8.2 - build system
 - Vertx 4.4.5 - http server & async framework
 - HSQLDB 2.7.1 - in-memory database
@@ -121,9 +123,9 @@ class WithdrawalServiceStub implements WithdrawalService {
 
 ![Domain model](./docs/domain.png)
 
-### API
+### API Description
 
-Check [Swagger](./src/main/resources/swagger.yaml) out or run application and open http://localhost:8080
+Check [the swagger file](./src/main/resources/swagger.yaml) out or run application and open http://localhost:8080
 
 ### Component diagram
 
@@ -139,7 +141,7 @@ Maven wrapper is used as a build system.
 
 Executable jar can be found in `./target/money-transfer-api-1.0-SNAPSHOT.jar`.
 
-#### Build with test coverage report
+#### Build with a test coverage report
 
 To build with pitest mutational test coverage report use:
 
@@ -157,4 +159,10 @@ To run the program use:
 
 ```bash
 > java -jar ./target/money-transfer-api-1.0-SNAPSHOT.jar
+```
+
+To read a help section about available options use:
+
+```bash
+> java -jar ./target/money-transfer-api-1.0-SNAPSHOT.jar --help
 ```
