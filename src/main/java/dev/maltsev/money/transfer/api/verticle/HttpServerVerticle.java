@@ -5,6 +5,7 @@ import dev.maltsev.money.transfer.api.domain.json.TransferRequest;
 import dev.maltsev.money.transfer.api.domain.json.WithdrawRequest;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import dev.maltsev.money.transfer.api.domain.object.TransactionType;
+import dev.maltsev.money.transfer.api.logging.Loggable;
 import dev.maltsev.money.transfer.api.service.impl.QueryService;
 import dev.maltsev.money.transfer.api.service.impl.TransferCommandService;
 import dev.maltsev.money.transfer.api.service.impl.WithdrawCommandService;
@@ -27,7 +28,7 @@ import static dev.maltsev.money.transfer.api.verticle.HttpServerVerticleUtils.ha
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 
 @RequiredArgsConstructor
-public class HttpServerVerticle extends AbstractVerticle {
+public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     private final TransferCommandService transferCommandService;
 
@@ -35,7 +36,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 
     private final QueryService queryService;
 
-    private final int recoveryDelay;
+    private final long recoveryInterval;
 
     @SneakyThrows
     private static void handleSwagger(RoutingContext routingContext) {
@@ -57,20 +58,21 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         createHttpServer(startPromise, router);
 
+        // Start background tasks for processing transactions
         runTransfersInBackground();
         runWithdrawalsInBackground();
         runPeriodicRecoverStuckTransactionWatcherInBackground();
     }
 
+    // Periodically check for stuck transactions and attempt to recover them
     private void runPeriodicRecoverStuckTransactionWatcherInBackground() {
-        vertx.setPeriodic(recoveryDelay, id -> {
+        vertx.setPeriodic(recoveryInterval, id -> {
             vertx.executeBlocking(() -> {
                 recoverStuckTransactions();
                 return null;
             }, false).onComplete(res -> {
                 if (res.failed()) {
-                    // todo log failed transaction
-                    System.err.println("Failed to process transfer request: " + res.cause().getMessage());
+                    logger().error("Failed to recover stuck transactions: {}", res.cause().getMessage());
                 }
             });
         });
@@ -87,6 +89,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
+    // Process withdrawal requests in background worker threads
     private void runWithdrawalsInBackground() {
         WorkerExecutor withdrawalExecutor = vertx.createSharedWorkerExecutor("withdrawal-worker-pool", 20);
         vertx.eventBus().consumer(TransactionType.WITHDRAWAL.name(), message -> {
@@ -99,13 +102,13 @@ public class HttpServerVerticle extends AbstractVerticle {
                 return null;
             }, false).onComplete(res -> {
                 if (res.failed()) {
-                    // todo log and save failed transaction
-                    System.err.println("Failed to process transfer request: " + res.cause().getMessage());
+                    logger().error("Failed to process withdrawal request: {}", res.cause().getMessage());
                 }
             });
         });
     }
 
+    // Process transfer requests in background worker threads
     private void runTransfersInBackground() {
         WorkerExecutor transferExecutor = vertx.createSharedWorkerExecutor("transfer-worker-pool", 10);
         vertx.eventBus().consumer(TransactionType.TRANSFER.name(), message -> {
@@ -115,13 +118,13 @@ public class HttpServerVerticle extends AbstractVerticle {
                 return null;
             }, false).onComplete(res -> {
                 if (res.failed()) {
-                    // todo log and save failed transaction
-                    System.err.println("Failed to process transfer request: " + res.cause().getMessage());
+                    logger().error("Failed to process transfer request: {}", res.cause().getMessage());
                 }
             });
         });
     }
 
+    // Create and save transaction for transfer requests in background worker thread
     private void handleTransferRequest(RoutingContext context) {
         String customerLogin = context.request().getParam("customer");
         vertx.executeBlocking(() -> {
@@ -139,6 +142,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
+    // Create and save transaction for withdrawal requests in background worker thread
     private void handleWithdrawRequest(RoutingContext context) {
         String customerLogin = context.request().getParam("customer");
         vertx.executeBlocking(() -> {
@@ -169,6 +173,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
+    // Recover stuck transactions by re-publishing them to the event bus
     public void recoverStuckTransactions() {
         queryService.getAllStuckTransactions()
                 .forEach(transaction -> vertx.eventBus().publish(transaction.type().name(), transaction.id()));

@@ -20,17 +20,13 @@ public abstract class AbstractCommandService extends AbstractService {
                     transactionId = tryInsertTransaction(transaction, connection);
                     connection.commit();
                 } catch (TransactionAlreadyExistsException e) {
-                    logTransactionAlreadyExist(transaction);
+                    logger().info("Transaction with requestId = '{}' and customerLogin = '{}' already exists", transaction.requestId(), transaction.payer());
                     transactionId = findTransactionIdByRequestIdAndPayer(transaction.requestId(), transaction.payer(), connection);
                 }
             } else {
-                logTransactionAlreadyExist(transaction);
+                logger().info("Transaction with requestId = '{}' and customerLogin = '{}' already exists", transaction.requestId(), transaction.payer());
             }
             return transactionId;
         }
-    }
-
-    private void logTransactionAlreadyExist(Transaction transaction) {
-        logger().info("Transaction with requestId = '{}' and customerLogin = '{}' already exists", transaction.requestId(), transaction.payer());
     }
 }

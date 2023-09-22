@@ -1,5 +1,6 @@
-package dev.maltsev.money.transfer.api;
+package dev.maltsev.money.transfer.api.scenario;
 
+import dev.maltsev.money.transfer.api.Application;
 import dev.maltsev.money.transfer.api.domain.object.Money;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import dev.maltsev.money.transfer.api.service.AbstractDatabaseTest;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.EnumSet;
 import java.util.UUID;
 
-import static dev.maltsev.money.transfer.api.AbstractScenarioApiTest.*;
+import static dev.maltsev.money.transfer.api.scenario.AbstractScenarioApiTest.*;
 import static dev.maltsev.money.transfer.api.domain.object.TransactionStatus.COMPLETED;
 import static dev.maltsev.money.transfer.api.domain.object.TransactionStatus.FAILED;
 import static io.restassured.RestAssured.given;
@@ -25,8 +26,7 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
 
     @BeforeAll
     public static void startServer() {
-        System.setProperty("recoveryDelay", "100");
-        Application.main(new String[]{});
+        Application.main(new String[]{"--recoveryInterval", "100"});
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
     }
@@ -149,8 +149,9 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testTransactionStatus_UnknownTransactionId_Failed() {
+    public void testWithdraw_UnknownTransactionId_Fail() {
         arrangeDatabase("withdraw/single");
+
         assertWithdrawal("customer", getJsonRequest("withdraw/single"));
 
         String status = given()
@@ -165,7 +166,7 @@ public class WithdrawalScenarioApiTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testTransactionStatus_UnknownCustomer_Failed() {
+    public void testWithdraw_UnknownCustomer_Fail() {
         arrangeDatabase("withdraw/single");
 
         String transactionId = assertWithdrawal("customer", getJsonRequest("withdraw/single"));

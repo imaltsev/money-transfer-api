@@ -58,7 +58,7 @@ public abstract class AbstractDatabaseTest implements Loggable {
     public static void cleanupDatabase() {
         try (Connection connection = sql2o.open()) {
             ScriptRunner runner = new ScriptRunner(connection.getJdbcConnection());
-            runner.runScript(new InputStreamReader(AbstractDatabaseTest.class.getResourceAsStream("/sql/cleanup.sql")));
+            runner.runScript(new InputStreamReader(AbstractDatabaseTest.class.getResourceAsStream("/data/cleanup.sql")));
         }
     }
 

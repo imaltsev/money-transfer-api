@@ -1,5 +1,6 @@
-package dev.maltsev.money.transfer.api;
+package dev.maltsev.money.transfer.api.scenario;
 
+import dev.maltsev.money.transfer.api.Application;
 import dev.maltsev.money.transfer.api.domain.object.Money;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import io.restassured.RestAssured;
@@ -20,8 +21,7 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
 
     @BeforeAll
     public static void startServer() {
-        System.setProperty("recoveryDelay", "100");
-        Application.main(new String[]{});
+        Application.main(new String[]{"--recoveryInterval", "100"});
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
     }
@@ -129,7 +129,7 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
     }
 
     @Test
-    public void testTransfer_2Customers_Ok() {
+    public void testTransfer_TwoCustomers_Ok() {
         arrangeDatabase("transfer/two-customers");
 
         String transactionId = assertSendTransfer("customer1", getJsonRequest("transfer/two-customers"));
@@ -153,7 +153,7 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
     }
 
     @Test
-    public void testTransactionStatus_UnknownTransactionId_Failed() {
+    public void testTransfer_UnknownTransactionId_Fail() {
         arrangeDatabase("transfer/single-customer");
         assertSendTransfer("customer", getJsonRequest("transfer/single-customer"));
 
@@ -169,7 +169,7 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
     }
 
     @Test
-    public void testTransactionStatus_UnknownCustomer_Failed() {
+    public void testTransfer_UnknownCustomer_Fail() {
         arrangeDatabase("transfer/single-customer");
 
         String transactionId = assertSendTransfer("customer", getJsonRequest("transfer/single-customer"));

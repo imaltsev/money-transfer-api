@@ -1,4 +1,4 @@
-package dev.maltsev.money.transfer.api;
+package dev.maltsev.money.transfer.api.scenario;
 
 import dev.maltsev.money.transfer.api.dao.TransactionDao;
 import dev.maltsev.money.transfer.api.domain.entity.Account;

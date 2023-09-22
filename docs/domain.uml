@@ -3,53 +3,66 @@
   <ID>DATABASE</ID>
   <OriginalElement>a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS</OriginalElement>
   <nodes>
-    <node x="713.5" y="-17.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_HISTORY</node>
-    <node x="203.66666666666669" y="-234.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMERS</node>
-    <node x="383.0" y="-404.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_TYPES</node>
-    <node x="706.5" y="-246.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_STATUSES</node>
-    <node x="-149.0" y="-245.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMER_ACCOUNTS</node>
-    <node x="-117.0" y="-17.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS</node>
-    <node x="334.0" y="-132.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS</node>
+    <node x="47.396551724137964" y="142.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_HISTORY</node>
+    <node x="352.0" y="-380.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMERS</node>
+    <node x="118.0" y="-392.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_TYPES</node>
+    <node x="-149.0" y="-392.5">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_STATUSES</node>
+    <node x="569.0603448275863" y="-114.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMER_ACCOUNTS</node>
+    <node x="522.0" y="-404.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS</node>
+    <node x="201.75" y="-241.0">a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS</node>
   </nodes>
   <notes />
   <edges>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMERS" relationship="REFERENCES">
-      <point x="-156.0" y="-62.5" />
-      <point x="278.6666666666667" y="-29.5" />
-      <point x="-0.0" y="27.0" />
+      <point x="26.0" y="-165.5" />
+      <point x="383.75" y="-262.0" />
+      <point x="427.0" y="-262.0" />
+      <point x="0.0" y="27.0" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMER_ACCOUNTS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMERS" relationship="REFERENCES">
-      <point x="119.0" y="0.0" />
-      <point x="-75.0" y="0.0" />
+      <point x="-59.5" y="-38.5" />
+      <point x="628.5603448275863" y="-282.0" />
+      <point x="477.0" y="-282.0" />
+      <point x="50.0" y="27.0" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_HISTORY" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_STATUSES" relationship="REFERENCES">
-      <point x="0.0" y="-50.0" />
+      <point x="-58.25" y="-50.0" />
+      <point x="105.64655172413796" y="116.0" />
+      <point x="-25.5" y="116.0" />
       <point x="0.0" y="39.0" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS" relationship="REFERENCES">
-      <point x="-156.0" y="0.0" />
-      <point x="87.0" y="0.0" />
+      <point x="156.0" y="0.0" />
+      <point x="551.5603448275863" y="-75.5" />
+      <point x="-57.43965517241372" y="50.5" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.CUSTOMER_ACCOUNTS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS" relationship="REFERENCES">
-      <point x="0.0" y="38.5" />
-      <point x="0.0" y="-50.5" />
+      <point x="0.0" y="-38.5" />
+      <point x="79.06034482758628" y="50.5" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_HISTORY" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS" relationship="REFERENCES">
-      <point x="-116.5" y="0.0" />
-      <point x="156.0" y="0.0" />
+      <point x="58.25" y="-50.0" />
+      <point x="222.14655172413796" y="116.0" />
+      <point x="357.75" y="116.0" />
+      <point x="0.0" y="165.5" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_STATUSES" relationship="REFERENCES">
-      <point x="29.5" y="-165.5" />
-      <point x="519.5" y="-207.0" />
-      <point x="-123.5" y="0.0" />
+      <point x="-130.0" y="-165.5" />
+      <point x="227.75" y="-262.0" />
+      <point x="-25.5" y="-262.0" />
+      <point x="0.0" y="39.0" />
     </edge>
     <edge source="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTIONS" target="a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.TRANSACTION_TYPES" relationship="REFERENCES">
-      <point x="0.0" y="-165.5" />
+      <point x="-78.0" y="-165.5" />
+      <point x="279.75" y="-272.0" />
+      <point x="225.0" y="-272.0" />
       <point x="0.0" y="39.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic" zoom="0.9821152468050321" showDependencies="false" x="402.25641494603747" y="80.94605025638907" />
-  <SelectedNodes />
+  <settings layout="Hierarchic" zoom="1.2323439099283522" showDependencies="false" x="339.5" y="-71.0" />
+  <SelectedNodes>
+    <node>a2451ef7-2af3-4330-a752-55086ade4b38.TABLE:PUBLIC.PUBLIC.ACCOUNTS</node>
+  </SelectedNodes>
   <Categories>
     <Category>Columns</Category>
     <Category>Comments</Category>

@@ -28,8 +28,15 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.30</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Command line args parser -->
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.82</version>
         </dependency>
 
         <!-- HSQLDB -->
@@ -160,10 +167,12 @@
                 <artifactId>pitest-maven</artifactId>
                 <version>1.14.4</version>
                 <configuration>
-                    <threads>4</threads>
+                    <excludedClasses>dev.maltsev.money.transfer.api.Application</excludedClasses>
                     <excludedMethods>
-                        <param>logTransactionAlreadyExist</param>
                         <param>logger</param>
+                        <param>hashCode</param>
+                        <param>equals</param>
+                        <param>toString</param>
                     </excludedMethods>
                     <targetClasses>
                         <param>dev.maltsev.money.transfer.api**</param>
@@ -171,6 +180,10 @@
                     <targetTests>
                         <param>dev.maltsev.money.transfer.api*</param>
                     </targetTests>
+                    <features>
+                        <feature>+flogcall</feature>
+                        <feature>+auto_threads</feature>
+                    </features>
                 </configuration>
                 <dependencies>
                     <dependency>
