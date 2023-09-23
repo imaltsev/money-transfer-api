@@ -167,7 +167,10 @@
                 <artifactId>pitest-maven</artifactId>
                 <version>1.14.4</version>
                 <configuration>
-                    <excludedClasses>dev.maltsev.money.transfer.api.Application</excludedClasses>
+                    <excludedClasses>
+                        <param>dev.maltsev.money.transfer.api.Application</param>
+                        <param>dev.maltsev.money.transfer.api.ApplicationArgs</param>
+                    </excludedClasses>
                     <excludedMethods>
                         <param>logger</param>
                         <param>hashCode</param>
@@ -178,7 +181,7 @@
                         <param>dev.maltsev.money.transfer.api**</param>
                     </targetClasses>
                     <targetTests>
-                        <param>dev.maltsev.money.transfer.api*</param>
+                        <param>dev.maltsev.money.transfer.api**</param>
                     </targetTests>
                     <features>
                         <feature>+flogcall</feature>

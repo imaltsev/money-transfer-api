@@ -2,8 +2,7 @@ package dev.maltsev.money.transfer.api.service.impl;
 
 import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
-import dev.maltsev.money.transfer.api.service.AbstractCommandService;
-import dev.maltsev.money.transfer.api.service.CommandService;
+import dev.maltsev.money.transfer.api.service.ICommandService;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
@@ -13,7 +12,7 @@ import static dev.maltsev.money.transfer.api.dao.TransactionDao.updateTransactio
 import static dev.maltsev.money.transfer.api.domain.object.TransactionStatus.PROCESSING;
 import static dev.maltsev.money.transfer.api.service.impl.CommandServiceUtils.validateTransferTransaction;
 
-public class TransferCommandService extends AbstractCommandService implements CommandService {
+public class TransferCommandService extends AbstractCommandService implements ICommandService {
 
     public TransferCommandService(Sql2o sql) {
         super(sql);

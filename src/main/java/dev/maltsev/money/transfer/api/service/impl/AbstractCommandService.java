@@ -1,4 +1,4 @@
-package dev.maltsev.money.transfer.api.service;
+package dev.maltsev.money.transfer.api.service.impl;
 
 import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import org.sql2o.Connection;

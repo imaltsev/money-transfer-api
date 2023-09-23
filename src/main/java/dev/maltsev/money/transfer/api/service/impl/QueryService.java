@@ -3,30 +3,20 @@ package dev.maltsev.money.transfer.api.service.impl;
 import dev.maltsev.money.transfer.api.dao.TransactionDao;
 import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
-import dev.maltsev.money.transfer.api.service.AbstractService;
+import dev.maltsev.money.transfer.api.service.IQueryService;
 import dev.maltsev.money.transfer.api.service.exception.UnknownTransactionException;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import java.util.List;
 
-/**
- * Read-only operations for transactions
- */
-public class QueryService extends AbstractService {
+public class QueryService extends AbstractService implements IQueryService {
 
     public QueryService(Sql2o sql) {
         super(sql);
     }
 
-    /**
-     * Returns the status of the transaction.
-     *
-     * @param transactionId the ID of the transaction
-     * @param payer         the login of the customer who initiated the transaction
-     * @return the status of the transaction
-     * @throws UnknownTransactionException if the transaction with the specified ID and payer doesn't exist
-     */
+    @Override
     public TransactionStatus getTransactionStatus(String transactionId, String payer) throws UnknownTransactionException {
         try (Connection connection = sql.open()) {
             TransactionStatus status = TransactionDao.getTransactionStatus(transactionId, payer, connection);
@@ -40,11 +30,7 @@ public class QueryService extends AbstractService {
         }
     }
 
-    /**
-     * Returns all transactions that are stuck in the PROCESSING state.
-     *
-     * @return the list of stuck transactions
-     */
+    @Override
     public List<Transaction> getAllStuckTransactions() {
         try (Connection connection = sql.open()) {
             return TransactionDao.getAllStuckTransactions(connection);

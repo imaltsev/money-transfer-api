@@ -7,6 +7,8 @@ import dev.maltsev.money.transfer.api.domain.json.WithdrawRequest;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import dev.maltsev.money.transfer.api.domain.object.TransactionType;
 import dev.maltsev.money.transfer.api.logging.Loggable;
+import dev.maltsev.money.transfer.api.service.ICommandService;
+import dev.maltsev.money.transfer.api.service.IQueryService;
 import dev.maltsev.money.transfer.api.service.impl.QueryService;
 import dev.maltsev.money.transfer.api.service.impl.TransferCommandService;
 import dev.maltsev.money.transfer.api.service.impl.WithdrawCommandService;
@@ -31,11 +33,11 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 @RequiredArgsConstructor
 public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
-    private final TransferCommandService transferCommandService;
+    private final ICommandService transferCommandService;
 
-    private final WithdrawCommandService withdrawCommandService;
+    private final ICommandService withdrawCommandService;
 
-    private final QueryService queryService;
+    private final IQueryService queryService;
 
     private final ApplicationArgs args;
 

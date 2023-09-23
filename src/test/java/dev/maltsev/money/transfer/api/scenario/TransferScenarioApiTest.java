@@ -5,17 +5,22 @@ import dev.maltsev.money.transfer.api.domain.object.Money;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import lombok.SneakyThrows;
 import org.hamcrest.Matchers;
 import org.hamcrest.text.MatchesPattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TransferScenarioApiTest extends AbstractScenarioApiTest {
 
@@ -194,5 +199,57 @@ public class TransferScenarioApiTest extends AbstractScenarioApiTest {
         assertEquals(TransactionStatus.COMPLETED, status);
         assertPayerAccountBalance(transactionId, Money.fromInt(100));
         assertRecipientAccountBalance(transactionId, Money.fromInt(200));
+    }
+
+    @Test
+    public void testTransfer_SameTransferSerial_Ok() {
+        arrangeDatabase("transfer/two-customers");
+
+        Set<String> transactionIds = IntStream.rangeClosed(1, 6).mapToObj(value ->
+                assertSendTransfer("customer1", getJsonRequest("transfer/two-customers"))
+        ).collect(Collectors.toSet());
+
+        assertNotNull(transactionIds);
+        assertEquals(1, transactionIds.size());
+
+        String transactionId = transactionIds.iterator().next();
+
+        TransactionStatus status = assertGetTransactionStatus("customer1", transactionId);
+
+        assertEquals(TransactionStatus.COMPLETED, status);
+        assertPayerAccountBalance(transactionId, Money.fromInt(100));
+        assertRecipientAccountBalance(transactionId, Money.fromInt(200));
+    }
+
+    @SneakyThrows
+    @Test
+    public void testTransfer_SameTransactionsParallel_Ok() {
+        arrangeDatabase("transfer/two-customers");
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(10)) {
+            List<Future<String>> futures = new ArrayList<>();
+
+            // Act
+            for (int i = 0; i < 10; i++) {
+                futures.add(executorService.submit(() -> assertSendTransfer("customer1", getJsonRequest("transfer/two-customers"))));
+            }
+
+            // Get the results
+            Set<String> transactionIds = new HashSet<>();
+            for (Future<String> future : futures) {
+                transactionIds.add(future.get());
+            }
+
+            // Assert
+            assertEquals(1, transactionIds.size());
+            String transactionId = transactionIds.iterator().next();
+            TransactionStatus status = assertGetTransactionStatus("customer1", transactionId);
+
+            assertEquals(TransactionStatus.COMPLETED, status);
+            assertPayerAccountBalance(transactionId, Money.fromInt(100));
+            assertRecipientAccountBalance(transactionId, Money.fromInt(200));
+
+            executorService.shutdown();
+        }
     }
 }
