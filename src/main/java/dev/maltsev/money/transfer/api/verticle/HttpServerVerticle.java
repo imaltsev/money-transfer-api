@@ -9,9 +9,6 @@ import dev.maltsev.money.transfer.api.domain.object.TransactionType;
 import dev.maltsev.money.transfer.api.logging.Loggable;
 import dev.maltsev.money.transfer.api.service.ICommandService;
 import dev.maltsev.money.transfer.api.service.IQueryService;
-import dev.maltsev.money.transfer.api.service.impl.QueryService;
-import dev.maltsev.money.transfer.api.service.impl.TransferCommandService;
-import dev.maltsev.money.transfer.api.service.impl.WithdrawCommandService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.WorkerExecutor;
@@ -82,7 +79,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
     }
 
     private void createHttpServer(Promise<Void> startPromise, Router router) {
-        vertx.createHttpServer().requestHandler(router).listen(8080, http -> {
+        vertx.createHttpServer().requestHandler(router).listen(args.getPort(), http -> {
             if (http.succeeded()) {
                 startPromise.complete();
                 System.out.println("HTTP server started on port 8080");
