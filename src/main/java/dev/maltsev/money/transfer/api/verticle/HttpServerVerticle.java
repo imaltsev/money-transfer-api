@@ -1,6 +1,6 @@
 package dev.maltsev.money.transfer.api.verticle;
 
-import dev.maltsev.money.transfer.api.ApplicationArgs;
+import dev.maltsev.money.transfer.api.Parameters;
 import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.json.TransferRequest;
 import dev.maltsev.money.transfer.api.domain.json.WithdrawRequest;
@@ -36,7 +36,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     private final IQueryService queryService;
 
-    private final ApplicationArgs args;
+    private final Parameters args;
 
     @SneakyThrows
     private static void handleSwagger(RoutingContext routingContext) {

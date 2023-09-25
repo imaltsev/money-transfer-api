@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationArgs {
+public class Parameters {
 
     @Parameter(names = {"--port", "-p"}, description = "The port number on which the server should run. Default is 8080.", arity = 1)
     private int port = 8080;
@@ -27,4 +27,9 @@ public class ApplicationArgs {
     @Parameter(names = {"--recoveryInterval", "-r"}, description = "An interval in milliseconds between transaction recovery attempts. Default is 60000.",
             arity = 1)
     private long recoveryInterval = 60_000;
+
+    @Parameter(names = {"--shutdownHookTimeout", "-s"},
+            description = "A timeout in milliseconds for graceful shutdown hook to wait for the server to stop. Default is 10000.",
+            arity = 1)
+    private long shutdownHookTimeout = 10_000;
 }

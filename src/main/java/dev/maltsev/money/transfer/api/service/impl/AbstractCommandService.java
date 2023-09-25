@@ -20,6 +20,7 @@ public abstract class AbstractCommandService extends AbstractService {
                     transactionId = tryInsertTransaction(transaction, connection);
                     connection.commit();
                 } catch (TransactionAlreadyExistsException e) {
+                    // just ignore and return existing transaction id as it is considered to be idempotent
                     logger().info("Transaction with requestId = '{}' and customerLogin = '{}' already exists", transaction.requestId(), transaction.payer());
                     transactionId = findTransactionIdByRequestIdAndPayer(transaction.requestId(), transaction.payer(), connection);
                 }

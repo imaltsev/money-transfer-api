@@ -169,7 +169,7 @@
                 <configuration>
                     <excludedClasses>
                         <param>dev.maltsev.money.transfer.api.Application</param>
-                        <param>dev.maltsev.money.transfer.api.ApplicationArgs</param>
+                        <param>dev.maltsev.money.transfer.api.Parameters</param>
                     </excludedClasses>
                     <excludedMethods>
                         <param>logger</param>
