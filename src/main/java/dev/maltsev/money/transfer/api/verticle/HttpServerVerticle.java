@@ -36,7 +36,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     private final IQueryService queryService;
 
-    private final Parameters args;
+    private final Parameters parameters;
 
     @SneakyThrows
     private static void handleSwagger(RoutingContext routingContext) {
@@ -66,7 +66,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Periodically check for stuck transactions and attempt to recover them
     private void runPeriodicRecoverStuckTransactionWatcherInBackground() {
-        vertx.setPeriodic(args.getRecoveryInterval(), id -> {
+        vertx.setPeriodic(parameters.getRecoveryInterval(), id -> {
             vertx.executeBlocking(() -> {
                 recoverStuckTransactions();
                 return null;
@@ -79,10 +79,10 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
     }
 
     private void createHttpServer(Promise<Void> startPromise, Router router) {
-        vertx.createHttpServer().requestHandler(router).listen(args.getPort(), http -> {
+        vertx.createHttpServer().requestHandler(router).listen(parameters.getPort(), http -> {
             if (http.succeeded()) {
                 startPromise.complete();
-                System.out.println("HTTP server started on port 8080");
+                logger().info("HTTP server started on port {}", parameters.getPort());
             } else {
                 startPromise.fail(http.cause());
             }
@@ -91,7 +91,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Process withdrawal requests in background worker threads
     private void runWithdrawalsInBackground() {
-        WorkerExecutor withdrawalExecutor = vertx.createSharedWorkerExecutor("withdrawal-worker-pool", args.getWithdrawalWorkerPoolSize());
+        WorkerExecutor withdrawalExecutor = vertx.createSharedWorkerExecutor("withdrawal-worker-pool", parameters.getWithdrawalWorkerPoolSize());
         vertx.eventBus().consumer(TransactionType.WITHDRAWAL.name(), message -> {
             withdrawalExecutor.executeBlocking(() -> {
                 String transactionId = (String) message.body();
@@ -110,7 +110,7 @@ public class HttpServerVerticle extends AbstractVerticle implements Loggable {
 
     // Process transfer requests in background worker threads
     private void runTransfersInBackground() {
-        WorkerExecutor transferExecutor = vertx.createSharedWorkerExecutor("transfer-worker-pool", args.getTransferWorkerPoolSize());
+        WorkerExecutor transferExecutor = vertx.createSharedWorkerExecutor("transfer-worker-pool", parameters.getTransferWorkerPoolSize());
         vertx.eventBus().consumer(TransactionType.TRANSFER.name(), message -> {
             transferExecutor.executeBlocking(() -> {
                 String transactionId = (String) message.body();
