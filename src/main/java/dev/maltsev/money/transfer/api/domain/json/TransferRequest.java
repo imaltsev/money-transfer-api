@@ -7,10 +7,14 @@ import dev.maltsev.money.transfer.api.domain.entity.Transaction;
 import dev.maltsev.money.transfer.api.domain.object.Money;
 import dev.maltsev.money.transfer.api.domain.object.TransactionStatus;
 import dev.maltsev.money.transfer.api.domain.object.TransactionType;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public final class TransferRequest extends AbstractRequest {
     private final String recipientAccountNumber;
     private final String recipient;

@@ -2,9 +2,11 @@ package dev.maltsev.money.transfer.api.domain.json;
 
 
 import dev.maltsev.money.transfer.api.domain.object.Money;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
+@EqualsAndHashCode
 public abstract class AbstractRequest implements Request {
     private final UUID requestId;
     private final String payerAccountNumber;
